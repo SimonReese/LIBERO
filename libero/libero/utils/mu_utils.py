@@ -1,4 +1,5 @@
 import re
+from typing import Any, Dict, List
 
 from libero.libero.envs.objects import OBJECTS_DICT
 from libero.libero.utils.bddl_generation_utils import (
@@ -100,13 +101,41 @@ class InitialSceneTemplates:
 
     def get_region_dict(
         self,
-        region_centroid_xy,
-        region_name,
+        region_centroid_xy: List[float],
+        region_name: str,
         target_name=None,
         region_half_len=0.02,
         yaw_rotation=(0.0, 0.0),
-    ):
-        """This is a function that creates a default region with rectangular shape."""
+    ) -> Dict[str, Dict[str, Any]]:
+        """This is a function that creates a default region with rectangular shape.
+
+            Parameters
+            -----------------
+            region_centroid_xy:
+                position [x, y] where the region centroid is located
+            region_name:
+                name of defined region
+            target_name:
+                name of the parent region - apparently it must be a fixture
+            region_half_len:
+                'radius' of the region, half side dimension such that the object will spawn inside
+                +/- region_centroid + radius
+            yaw_rotation:
+                in theory it can be None, a float value or (range-, range+) for randomness.
+                However, LIBERO doesnt parse correctly bddl files where only one value is used for rotation.
+                Therefore, to fix rotation set a tuple with identical values (range, range)
+            
+            Returns
+            ------
+            a dict of regions in format:
+                
+                region_name : {
+                    target: target name
+                    ranges: a list vertices of the region
+                    yaw_rotation: list of values
+                }
+
+        """
         if target_name is None:
             target_name = self.workspace_name
         region_key_value = {
@@ -123,7 +152,6 @@ class InitialSceneTemplates:
                 "yaw_rotation": [yaw_rotation],
             }
         }
-        print
         return region_key_value
 
     @property
