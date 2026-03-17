@@ -560,23 +560,28 @@ class BDDLBaseDomain(SingleArmEnv):
         return sensors, names
 
     def _add_placement_initializer(self):
+        """ Places objects in the scene
+            
+        """
 
         mapping_inv = {}
+        # Get fixtures
         for k, values in self.parsed_problem["fixtures"].items():
             for v in values:
                 mapping_inv[v] = k
+        # Get objects
         for k, values in self.parsed_problem["objects"].items():
             for v in values:
                 mapping_inv[v] = k
-
+        # Get regions, initial states, problem name
         regions = self.parsed_problem["regions"]
         initial_state = self.parsed_problem["initial_state"]
         problem_name = self.parsed_problem["problem_name"]
-
+        # Prepare to store placement states
         conditioned_initial_place_state_on_sites = []
         conditioned_initial_place_state_on_objects = []
         conditioned_initial_place_state_in_objects = []
-
+        # Foreach predicate in initial state
         for state in initial_state:
             if state[0] == "on" and state[2] in self.objects_dict:
                 conditioned_initial_place_state_on_objects.append(state)
