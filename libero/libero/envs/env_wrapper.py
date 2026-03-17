@@ -53,7 +53,7 @@ class ControlEnv:
         self.problem_name = problem_info["problem_name"]
         self.domain_name = problem_info["domain_name"]
         self.language_instruction = problem_info["language_instruction"]
-        self.env = TASK_MAPPING[self.problem_name](
+        self.env: bddl_base_domain.BDDLBaseDomain = TASK_MAPPING[self.problem_name](
             bddl_file_name,
             robots=robots,
             controller_configs=controller_configs,
