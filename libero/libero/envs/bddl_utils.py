@@ -1,12 +1,20 @@
+from typing import List, Union, Dict
+
 from bddl.parsing import *
 
-import itertools
 import numpy as np
 
 pi = np.pi
 
 
 def get_regions(t, regions, group):
+    """
+        Parses regions from bddl file and returns a list of regions dictionaries
+
+        Issues
+        -------
+        Has trouble parsing bddl files where the rotation has only one value
+    """
     group.pop(0)
     while group:
         region = group.pop(0)
@@ -84,7 +92,21 @@ def get_problem_info(problem_filename):
     }
 
 
-def robosuite_parse_problem(problem_filename):
+def robosuite_parse_problem(problem_filename) -> Dict[str, Union[str, List, Dict]]:
+    """ Returns a dictionary representing the scene elements.
+
+        The dictionary has the following structure:
+        - `problem_name`: str,
+        - `fixtures`: dict,
+        - `regions`: dict,
+        - `objects`: dict,
+        - `scene_properties`: dict,
+        - `initial_state`: list,
+        - `goal_state`: list,
+        - `language_instruction`: str,
+        - `obj_of_interest`: list,
+
+    """
     domain_name = "robosuite"
     problem_filename = problem_filename
     tokens = scan_tokens(filename=problem_filename)
