@@ -12,6 +12,7 @@ TaskInfoTuple = namedtuple(
 
 
 def register_task_info(language, scene_name, objects_of_interest=[], goal_states=[]):
+    """ Fills the TASK_INFO list"""
 
     if scene_name not in TASK_INFO:
         TASK_INFO[scene_name] = []
@@ -52,6 +53,7 @@ def get_suite_generator_func(workspace_name):
 
 
 def generate_bddl_from_task_info(folder="/tmp/pddl"):
+    """ Generates all bddl files in TASK_INFO list"""
     results = []
     failures = []
     bddl_file_names = []

@@ -1,5 +1,6 @@
+from ast import Call
 import re
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List, Type
 
 from libero.libero.envs.objects import OBJECTS_DICT
 from libero.libero.utils.bddl_generation_utils import (
@@ -13,8 +14,18 @@ MU_DICT = {}
 SCENE_DICT = {}
 
 
-def register_mu(scene_type="general"):
-    def _func(target_class):
+def register_mu(scene_type="general") -> Callable[[Type["InitialSceneTemplates"]], Type["InitialSceneTemplates"]]:
+    """ Registers a class as a new libero scene.
+
+        It fills:
+            MU_DICT <- with a new scene (class) name
+            SCENE_DICT <- with a new scene type (if not already present)
+
+        Returns:
+        --------
+        A decorator function expecting Type[InitialSceneTemplates] -> Type["InitialSceneTemplates"]
+    """
+    def _func(target_class: Type[InitialSceneTemplates]) -> Type["InitialSceneTemplates"]:
         """For reusing initial conditions easily, we register each pre-defined initial conditions in a dictionary."""
         key = "_".join(
             re.sub(r"([A-Z])", r" \1", target_class.__name__).split()
